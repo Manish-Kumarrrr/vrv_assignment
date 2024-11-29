@@ -4,7 +4,6 @@ spring:
       uri: mongodb+srv://manish:fBxLDjziEgA6CCEn@vrv.tzoxj.mongodb.net/?retryWrites=true&w=majority&appName=vrv
       database: rbac
 
-
 logging:
   level:
     root: WARN

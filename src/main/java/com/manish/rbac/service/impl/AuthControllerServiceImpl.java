@@ -1,6 +1,5 @@
 package com.manish.rbac.service.impl;
 
-import com.manish.rbac.controller.ResourceController;
 import com.manish.rbac.dto.LoginRequest;
 import com.manish.rbac.dto.LoginResponse;
 import com.manish.rbac.dto.RegisterRequest;
@@ -12,38 +11,46 @@ import com.manish.rbac.repository.UserRepository;
 import com.manish.rbac.service.AuthControllerService;
 import com.manish.rbac.utilis.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.logging.Logger;
-
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Automatically generates a constructor to inject dependencies
 public class AuthControllerServiceImpl implements AuthControllerService {
 
+    private final UserRepository userRepository; // Repository to interact with the MongoDB database
+    private final PasswordEncoder passwordEncoder; // For encoding and verifying user passwords
+    private final JwtUtil jwtUtil; // Utility to generate and validate JWT tokens
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
-//    private static final Logger logger = (Logger) LoggerFactory.getLogger(ResourceController.class);
+    /**
+     * Register a new user.
+     *
+     * @param registerRequest The user details for registration.
+     * @return RegisterResponse containing user information and JWT token.
+     */
     @Override
     public RegisterResponse registerUser(RegisterRequest registerRequest) {
-        User inputUser=User.builder()
-                .id(registerRequest.getId())
-                .name(registerRequest.getName())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .email(registerRequest.getEmail())
-                .roles(registerRequest.getRoles())
+        // Create a new User object from the registerRequest
+        User inputUser = User.builder()
+                .id(registerRequest.getId()) // Set the user ID
+                .name(registerRequest.getName()) // Set the user name
+                .password(passwordEncoder.encode(registerRequest.getPassword())) // Encode the password
+                .email(registerRequest.getEmail()) // Set the user email
+                .roles(registerRequest.getRoles()) // Set the user roles (USER, ADMIN, etc.)
                 .build();
+
+        // Check if a user with the same ID already exists in the database
         if (userRepository.existsById(inputUser.getId())) {
-//            logger.warning("User already exists with id: " + inputUser.getId());
             throw new UserAlreadyExistsException("User already exists with id: " + inputUser.getId());
         }
-        User savedUser=userRepository.save(inputUser);
-        String token= jwtUtil.generateToken(savedUser);
+
+        // Save the user to the database
+        User savedUser = userRepository.save(inputUser);
+
+        // Generate a JWT token for the saved user
+        String token = jwtUtil.generateToken(savedUser);
+
+        // Return a response with user details and the generated token
         return RegisterResponse.builder()
                 .id(savedUser.getId())
                 .name(savedUser.getName())
@@ -53,17 +60,30 @@ public class AuthControllerServiceImpl implements AuthControllerService {
                 .build();
     }
 
+    /**
+     * Handle user login.
+     *
+     * @param loginRequest The user's login credentials.
+     * @return LoginResponse containing the user's ID and JWT token.
+     */
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        User user=userRepository.findById(loginRequest.getId()).orElseThrow(()->new UserNotFoundException("User doesn't exist with id: "+loginRequest.getId()));
-        if(!passwordEncoder.matches(loginRequest.getPassword(),user.getPassword())){
-        throw new UserNotFoundException("Wrong Credential!!");
+        // Retrieve the user by ID, throw exception if user not found
+        User user = userRepository.findById(loginRequest.getId())
+                .orElseThrow(() -> new UserNotFoundException("User doesn't exist with id: " + loginRequest.getId()));
+
+        // Check if the provided password matches the stored password
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new UserNotFoundException("Wrong Credential!!");
         }
-        String token= jwtUtil.generateToken(user);
+
+        // Generate a JWT token for the authenticated user
+        String token = jwtUtil.generateToken(user);
+
+        // Return a response with the user's ID and the generated token
         return LoginResponse.builder()
                 .token(token)
                 .id(user.getId())
                 .build();
     }
-
 }

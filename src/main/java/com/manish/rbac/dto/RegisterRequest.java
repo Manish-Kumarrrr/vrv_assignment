@@ -3,8 +3,11 @@ package com.manish.rbac.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
 
+/**
+ * DTO class for user registration request.
+ * This class holds the necessary details provided by the user during the registration process.
+ */
 @Data
 @Builder
 public class RegisterRequest {
@@ -12,6 +15,5 @@ public class RegisterRequest {
     private String name;
     private String email;
     private String password;
-    private List<String> roles;
-
+    private String roles;
 }
