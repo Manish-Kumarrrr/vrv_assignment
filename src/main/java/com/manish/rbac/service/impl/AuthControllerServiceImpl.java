@@ -1,9 +1,12 @@
 package com.manish.rbac.service.impl;
 
 import com.manish.rbac.controller.ResourceController;
+import com.manish.rbac.dto.LoginRequest;
+import com.manish.rbac.dto.LoginResponse;
 import com.manish.rbac.dto.RegisterRequest;
 import com.manish.rbac.dto.RegisterResponse;
 import com.manish.rbac.exception.UserAlreadyExistsException;
+import com.manish.rbac.exception.UserNotFoundException;
 import com.manish.rbac.model.User;
 import com.manish.rbac.repository.UserRepository;
 import com.manish.rbac.service.AuthControllerService;
@@ -31,7 +34,7 @@ public class AuthControllerServiceImpl implements AuthControllerService {
         User inputUser=User.builder()
                 .id(registerRequest.getId())
                 .name(registerRequest.getName())
-                .password(registerRequest.getPassword())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
                 .roles(registerRequest.getRoles())
                 .build();
@@ -47,6 +50,19 @@ public class AuthControllerServiceImpl implements AuthControllerService {
                 .email(savedUser.getEmail())
                 .roles(savedUser.getRoles())
                 .token(token)
+                .build();
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+        User user=userRepository.findById(loginRequest.getId()).orElseThrow(()->new UserNotFoundException("User doesn't exist with id: "+loginRequest.getId()));
+        if(!passwordEncoder.matches(loginRequest.getPassword(),user.getPassword())){
+        throw new UserNotFoundException("Wrong Credential!!");
+        }
+        String token= jwtUtil.generateToken(user);
+        return LoginResponse.builder()
+                .token(token)
+                .id(user.getId())
                 .build();
     }
 

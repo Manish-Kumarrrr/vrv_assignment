@@ -12,4 +12,9 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleUserAlreadyExistsException(UserAlreadyExistsException exception){
         return ProblemDetail.forStatusAndDetail(HttpStatus.EXPECTATION_FAILED,exception.getMessage());
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ProblemDetail handleUserNotFoundException(UserNotFoundException exception){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,exception.getMessage());
+    }
 }

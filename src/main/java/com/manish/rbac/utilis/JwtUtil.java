@@ -53,10 +53,10 @@ public class JwtUtil {
     }
 
     // Create the JWT token with custom claims and subject
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String id) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(subject)
+                .setSubject(id)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 50)) // 50 minutes expiration time
                 .setHeaderParam("typ", "JWT") // Set custom header parameter
