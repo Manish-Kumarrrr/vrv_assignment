@@ -1,4 +1,4 @@
-# RBAC Authentication System
+# Role-Based Access Control (RBAC)
 
 ## Purpose of the Project
 
@@ -10,7 +10,6 @@ The **RBAC Authentication System** provides role-based access control (RBAC) for
 - **Role-based Access**: Access to certain API endpoints is restricted based on user roles.
 - **JWT-based Authentication**: All API requests are authenticated using JWT tokens.
 
-## What is Going on in the Project?
 
 ### Technologies Used:
 - **Spring Boot**: Backend framework.
@@ -44,4 +43,16 @@ Ensure the following tools are installed on your local machine:
    ```bash
    maven clean install
    mvn spring-boot:run
-3. **The application will start on http://localhost:8080.**
+3. **The application will start on http://localhost:8080**
+
+### Accessing the API Endpoints
+- **POST**: /v1/auth/register.
+- **GET**: /v1/auth/login
+- **GET**: /v1/resources/user (for USER,MODERATOR,ADMIN role)
+- **GET**: /v1/resources/moderator (for MODERATOR,ADMIN role)
+- **GET**: /v1/resources/admin (for ADMIN role)
+
+
+---
+
+This README is in markdown format and provides clear instructions on how to run the project locally with MongoDB.
