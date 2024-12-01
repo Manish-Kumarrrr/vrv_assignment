@@ -46,7 +46,7 @@ Ensure the following tools are installed on your local machine:
 3. **The application will start on http://localhost:8080**
 
 ### Accessing the API Endpoints
-- **POST**: /v1/auth/register.
+- **POST**:/v1/auth/register.
 - **GET**: /v1/auth/login
 - **GET**: /v1/resources/user (for USER,MODERATOR,ADMIN role)
 - **GET**: /v1/resources/moderator (for MODERATOR,ADMIN role)
@@ -55,4 +55,4 @@ Ensure the following tools are installed on your local machine:
 
 ---
 
-This README is in markdown format and provides clear instructions on how to run the project locally with MongoDB.
+This README provides clear instructions on how to run the project locally with MongoDB.

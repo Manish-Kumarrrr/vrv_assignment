@@ -5,6 +5,9 @@ import com.manish.rbac.dto.LoginResponse;
 import com.manish.rbac.dto.RegisterRequest;
 import com.manish.rbac.dto.RegisterResponse;
 import com.manish.rbac.service.AuthControllerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/v1/auth") // Base URL for authentication-related endpoints
-@RequiredArgsConstructor // Lombok annotation to automatically generate a constructor for the final fields
+@RequiredArgsConstructor // Lombok's annotation to automatically generate a constructor for the final fields
+@Tag(name = "Authentication API", description = "APIs for user authentication and authorization")
 public class AuthController {
 
     private final AuthControllerService authControllerService; // Service layer for authentication logic
@@ -23,24 +27,36 @@ public class AuthController {
     /**
      * Registers a new user. The request body contains the user's registration details.
      *
-     * @param registerRequest The request body containing user registration data
-     * @return ResponseEntity containing the registration response and HTTP status code
+     * @param registerRequest The request body containing user registration data.
+     * @return ResponseEntity containing the registration response and HTTP status code.
      */
-    @PostMapping("/register") // Endpoint for registering a new user
-    public ResponseEntity<RegisterResponse> registerUser(@RequestBody RegisterRequest registerRequest) {
-        // Calls the service to register the user and returns the response with a CREATED status (201)
-        return new ResponseEntity<>(authControllerService.registerUser(registerRequest), HttpStatus.CREATED);
+    @PostMapping("/register")
+    @Operation(
+            summary = "Register a new user",
+            description = "Registers a new user and stores the information in the database."
+    )
+    public ResponseEntity<RegisterResponse> registerUser(
+            @Parameter(description = "Details of the user to register", required = true)
+            @RequestBody RegisterRequest registerRequest) {
+        RegisterResponse response = authControllerService.registerUser(registerRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**
      * Authenticates a user. The request body contains login credentials (email and password).
      *
-     * @param loginRequest The request body containing user login data
-     * @return ResponseEntity containing the login response and HTTP status code
+     * @param loginRequest The request body containing user login data.
+     * @return ResponseEntity containing the login response and HTTP status code.
      */
-    @GetMapping("/login") // Endpoint for user login
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-        // Calls the service to authenticate the user and returns the response with an OK status (200)
-        return new ResponseEntity<>(authControllerService.login(loginRequest), HttpStatus.OK);
+    @PostMapping("/login")
+    @Operation(
+            summary = "Authenticate a user",
+            description = "Authenticates a user using email and password and returns a JWT token if valid."
+    )
+    public ResponseEntity<LoginResponse> loginUser(
+            @Parameter(description = "User credentials for authentication", required = true)
+            @RequestBody LoginRequest loginRequest) {
+        LoginResponse response = authControllerService.login(loginRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

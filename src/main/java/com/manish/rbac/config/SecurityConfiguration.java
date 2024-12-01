@@ -34,7 +34,7 @@ public class SecurityConfiguration {
 
         return http.authorizeHttpRequests(request -> request
                         // Allow public access to authentication-related endpoints
-                        .requestMatchers("/v1/auth/**").permitAll()
+                        .requestMatchers("/v1/auth/**","/v3/**","/swagger-ui/**","swagger-ui.html").permitAll()
                         // Resource endpoints for 'USER', 'MODERATOR', and 'ADMIN' roles
                         .requestMatchers("/v1/resources/user").hasAnyRole(ROLE.USER,ROLE.MODERATOR,ROLE.ADMIN)
                         // Resource endpoints for 'MODERATOR' and 'ADMIN' roles

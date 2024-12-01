@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration // Indicates that this class provides configuration to the Spring container
-@RequiredArgsConstructor // Lombok annotation to generate a constructor with required arguments for final fields
+@RequiredArgsConstructor // Lombok's annotation to generate a constructor with required arguments for final fields
 public class ApplicationConfig {
 
     private final UserRepository userRepository; // The user repository for fetching user data
@@ -35,7 +35,7 @@ public class ApplicationConfig {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getEmail()) // Use email as the username
                     .password(user.getPassword()) // The encoded password
-                    .roles(user.getRoles()) // Set user roles (e.g., "ROLE_USER")
+                    .roles(user.getRoles()) // Set user roles (e.g., "USER")
                     .build();
         };
     }
@@ -44,7 +44,7 @@ public class ApplicationConfig {
      * Bean that provides the AuthenticationManager, used for authenticating users.
      * It is automatically configured by Spring Security based on the provided authentication configuration.
      *
-     * @param config The AuthenticationConfiguration to get the authentication manager from
+     * @param config The AuthenticationConfiguration to get the authentication manager
      * @return AuthenticationManager
      * @throws Exception If an error occurs during the creation of the authentication manager
      */
