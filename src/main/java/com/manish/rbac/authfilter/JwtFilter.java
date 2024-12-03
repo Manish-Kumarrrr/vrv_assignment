@@ -1,6 +1,7 @@
 package com.manish.rbac.authfilter;
 
 import com.manish.rbac.utilis.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,34 +38,44 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // Extract the Authorization header from the request
         String authorizationHeader = request.getHeader("Authorization");
         String jwt = null;
         String id = null;
 
-        // Check if the Authorization header contains the Bearer token
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7); // Extract the token part
-            id = jwtUtil.extractId(jwt); // Extract the user id from the JWT
-        }
-
-        // If an id is found (user is authenticated)
-        if (id != null) {
-            // Load the user details using the id (username)
-            UserDetails userDetails = userDetailsService.loadUserByUsername(id);
-
-            // If the JWT is valid, authenticate the user
-            if (jwtUtil.validateToken(jwt)) {
-                // Create a UsernamePasswordAuthenticationToken for authentication
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-
-                // Set additional details (like IP address) for the authentication
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // Set the authentication token in the SecurityContext for the current request
-                SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            // Check if the Authorization header contains the Bearer token
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7); // Extract the token part
+                id = jwtUtil.extractId(jwt); // Extract the user id from the JWT
             }
+
+            // If an id is found (user is authenticated)
+            if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Load the user details using the id (username)
+                UserDetails userDetails = userDetailsService.loadUserByUsername(id);
+
+                // If the JWT is valid, authenticate the user
+                if (jwtUtil.validateToken(jwt)) {
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+            }
+
+        }catch (JwtException e) {
+            // Handle other JWT-related exceptions
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("JWT Error: " + e.getMessage());
+            return;
+
+        } catch (Exception e) {
+            // Handle general exceptions
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("An error occurred while processing the JWT token: " + e.getMessage());
+            return;
         }
 
         // Continue the request processing through the filter chain
