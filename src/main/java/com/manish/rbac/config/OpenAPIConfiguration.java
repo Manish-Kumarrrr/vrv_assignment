@@ -1,34 +1,25 @@
 package com.manish.rbac.config;
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 @Configuration
 public class OpenAPIConfiguration {
 
     @Bean
-    public OpenAPI defineOpenApi() {
-        Server server = new Server();
-        server.setUrl("http://localhost:8080");
-        server.setDescription("Development");
+    public OpenAPI customOpenAPI() {
 
-        Contact myContact = new Contact();
-        myContact.setName("Manish Kumar");
-        myContact.setEmail("mkumar.work24@gmail.com");
+        return new OpenAPI()
+                .info(new Info().title("RBAC(Role Based Access Control)"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme()
+                        .name("bearerAuth").type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
 
-        Info information = new Info()
-                .title("Role Based Access Control(RBAC)")
-                .version("1.0")
-                .description("This API exposes endpoints to manage rbac.")
-                .contact(myContact);
-        return new OpenAPI().info(information).servers(List.of(server));
     }
 }

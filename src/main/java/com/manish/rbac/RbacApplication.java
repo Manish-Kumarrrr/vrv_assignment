@@ -14,7 +14,6 @@ public class RbacApplication {
 
 	/**
 	 * The main method that starts the Spring Boot application.
-	 *
 	 * @param args Command line arguments passed when the application is run.
 	 */
 	public static void main(String[] args) {
