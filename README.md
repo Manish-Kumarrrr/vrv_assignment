@@ -1,5 +1,17 @@
 # Role-Based Access Control (RBAC)
 
+## Table of Contents
+1. [Purpose of the Project](#purpose-of-the-project)
+2. [Key Features](#key-features)
+3. [Technologies Used](#technologies-used)
+4. [How to Run the Project Locally](#how-to-run-the-project-locally)  
+   4.1 [Prerequisites](#prerequisites)  
+   4.2 [Steps to Run the Project](#steps-to-run-the-project)  
+5. [Accessing the API Endpoints](#accessing-the-api-endpoints)
+6. [Accessing the Swagger UI](#swagger-ui)
+
+---
+
 ## Purpose of the Project
 
 The **RBAC Authentication System** provides role-based access control (RBAC) for a web application using **Spring Boot**, **JWT (JSON Web Token)**, and **MongoDB**. The system allows users to register, log in, and access protected resources based on their assigned roles (e.g., **User**, **Moderator**, **Admin**).
@@ -53,6 +65,12 @@ Ensure the following tools are installed on your local machine:
 - **GET**: /v1/resources/admin (for ADMIN role)
 
 
----
 
-This README provides clear instructions on how to run the project locally with MongoDB.
+## Swagger UI
+- **The swagger ui will start on  http://localhost:8080/swagger-ui/index.html**
+![image](https://github.com/user-attachments/assets/75afe4e8-0591-4c89-b5d1-41d2bcd69a2f)
+
+---
+## Contact
+- Author: Manish Kumar
+- GitHub: [Manish-Kumarrrr](https://github.com/Manish-Kumarrrr)
