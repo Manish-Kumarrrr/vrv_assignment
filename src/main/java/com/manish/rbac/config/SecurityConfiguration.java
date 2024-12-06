@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * SecurityConfiguration class handles the security setup for the application.
@@ -35,7 +34,7 @@ public class SecurityConfiguration {
 
         return http.authorizeHttpRequests(request -> request
                         // Allow public access to authentication-related endpoints
-                        .requestMatchers("/v1/auth/**", "swagger-ui.html").permitAll()
+                        .requestMatchers("/v1/auth/**", "/swagger-ui/index.html").permitAll()
                         // Resource endpoints for 'USER', 'MODERATOR', and 'ADMIN' roles
                         .requestMatchers("/v1/resources/user").hasAnyRole(ROLE.USER, ROLE.MODERATOR, ROLE.ADMIN)
                         // Resource endpoints for 'MODERATOR' and 'ADMIN' roles
