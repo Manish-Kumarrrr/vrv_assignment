@@ -13,3 +13,8 @@ logging:
 
 secret:
   key: CHEFsEVfypW#7g9^k*Z8$VTaK+HaV^uv
+
+cookie:
+  expireTime: 3000
+
+env: dev
