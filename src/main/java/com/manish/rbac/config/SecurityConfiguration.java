@@ -12,6 +12,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * SecurityConfiguration class handles the security setup for the application.
  */
@@ -22,6 +25,12 @@ public class SecurityConfiguration {
 
     private final JwtFilter jwtFilter; // JWT filter used to authenticate requests
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint; // Custom entry point for unauthorized requests
+    private static final String[] whiteListUrl = {  // Array of whiteList Url
+            "/v1/auth/**",
+            "/swagger-ui/index.html",
+            "/v3/**",
+            "/swagger-ui/**"
+    };
 
     /**
      * Security filter chain configuration to define authorization and authentication mechanisms.
@@ -32,9 +41,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+
+
         return http.authorizeHttpRequests(request -> request
                         // Allow public access to authentication-related endpoints
-                        .requestMatchers("/v1/auth/**", "/swagger-ui/index.html").permitAll()
+                        .requestMatchers(whiteListUrl).permitAll()
                         // Resource endpoints for 'USER', 'MODERATOR', and 'ADMIN' roles
                         .requestMatchers("/v1/resources/user").hasAnyRole(ROLE.USER, ROLE.MODERATOR, ROLE.ADMIN)
                         // Resource endpoints for 'MODERATOR' and 'ADMIN' roles
