@@ -1,14 +1,13 @@
 # Role-Based Access Control (RBAC)
 
-## Table of Contents
-1. [Purpose of the Project](#purpose-of-the-project)
-2. [Key Features](#key-features)
-3. [Technologies Used](#technologies-used)
+1. [Purpose of the Project](#purpose-of-the-project)  
+2. [Key Features](#key-features)  
+3. [Technologies Used](#technologies-used)  
 4. [How to Run the Project Locally](#how-to-run-the-project-locally)  
-   4.1 [Prerequisites](#prerequisites)  
-   4.2 [Steps to Run the Project](#steps-to-run-the-project)  
-5. [Accessing the API Endpoints](#accessing-the-api-endpoints)
-6. [Accessing the Swagger UI](#swagger-ui)
+   - [Method 1: Using Java and Maven](#method-1-using-java-and-maven)  
+   - [Method 2: Using Docker](#method-2-using-docker)  
+5. [Accessing the API Endpoints](#accessing-the-api-endpoints)  
+6. [Accessing the Swagger UI](#swagger-ui)  
 
 ---
 
@@ -37,12 +36,13 @@ The project uses role-based access control to manage access to various endpoints
 
 ## How to Run the Project Locally
 
-### Prerequisites
+### Method 1: Using Java and Maven
 Ensure the following tools are installed on your local machine:
 
 1. **JDK 17** (or higher)
 2. **Maven** (for building and managing dependencies)
 3. **MongoDB** (already it has connection with MongoDB Atlas)
+4. **PORT** (bydefault configured with 8080)
 
 
 ### Steps to Run the Project
@@ -55,7 +55,24 @@ Ensure the following tools are installed on your local machine:
    ```bash
    maven clean install
    mvn spring-boot:run
-3. **The application will start on http://localhost:8080**
+3. **The application will start on http://localhost:{PORT}**
+
+### Method 2: Using Docker
+Ensure the following tools are installed on your local machine:
+
+1. **Install Docker and Ensure it is running** 
+
+### Steps to Run the Project
+
+1. **Pull the Image**:
+   ```bash
+   docker pull devmanish12/rbac
+   ```
+2. **Run it locally**:
+   ```bash
+   docker run -p {PORT}:8080 rbac
+   ```
+3. **The application will start on http://localhost:{PORT}**
 
 ### Accessing the API Endpoints
 - **POST**:/v1/auth/register.
@@ -67,7 +84,7 @@ Ensure the following tools are installed on your local machine:
 
 
 ## Swagger UI
-- **The swagger ui will start on  http://localhost:8080/swagger-ui/index.html**
+- **The swagger ui will start on  http://localhost:{PORT}/swagger-ui/index.html**
 ![image](https://github.com/user-attachments/assets/75afe4e8-0591-4c89-b5d1-41d2bcd69a2f)
 
 ---
